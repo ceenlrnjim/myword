@@ -14,7 +14,7 @@
             x1.addEventListener('load', function () {
                 sixWords = eval(x1.responseText);
             });
-            x1.open('GET', 'http://localhost:8080/sixes.json');
+            x1.open('GET', 'sixes.json');
             x1.overrideMimeType('application/json');
             x1.send();
 
@@ -23,7 +23,7 @@
                 sevenWords = eval(x2.responseText);
                 resolve();
             });
-            x2.open('GET', 'http://localhost:8080/sevens.json');
+            x2.open('GET', 'sevens.json');
             x2.overrideMimeType('application/json');
             x2.send();
         });
