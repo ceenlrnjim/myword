@@ -13,11 +13,14 @@
             var x1 = new XMLHttpRequest();
             x1.addEventListener('load', function () {
                 sixWords = eval(x1.responseText);
+                resolve();
             });
             x1.open('GET', 'sixes.json');
             x1.overrideMimeType('application/json');
             x1.send();
+        });
 
+        var p2 = new Promise(function(resolve, reject) {
             var x2 = new XMLHttpRequest();
             x2.addEventListener('load', function () {
                 sevenWords = eval(x2.responseText);
@@ -28,7 +31,7 @@
             x2.send();
         });
 
-        return p;
+        return Promise.all([p,p2]);
     }
 
     function score(target, guess, start, len) {
@@ -83,7 +86,7 @@
 
     function pickWord(words) {
         var index = Math.floor(Math.random() * (words.length)); 
-        currentWord = words[index];
+        currentWord = words[index].toLowerCase();
     }
 
     // TODO: add reset button to play again
@@ -130,7 +133,7 @@
 
     function submitGuess() {
         var guessInput = document.getElementById('guessInput');
-        var g = guessInput.value;
+        var g = guessInput.value.toLowerCase();
         var scoreDisplay = document.getElementById('scoreDisplay');
 
         //console.log('guessing', round, guessCount, g, currentWord);
