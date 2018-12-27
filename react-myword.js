@@ -1,27 +1,3 @@
-// TODO: cleanup this mess of grabbing values
-// - maybe keep the values at the row?  then send them down to the cell?
-// - maybe rows should be stateful?
-function getRowStartIndex(row) {
-    return _.findIndex(row, cell => cell.start);
-}
-
-function getCurrentStartIndex(state) {
-    return getRowStartIndex(state.tableModel[state.activeRow]);
-}
-
-function getCurrentGuessLength(state) {
-    var row = state.tableModel[state.activeRow];
-    return _.findIndex(row, cell => cell.last) + 1 - (getRowStartIndex(row));
-}
-
-function getGuess(state, nextTable) {
-    var guess = '';
-    var startIx = getCurrentStartIndex(state);
-    var rowToScore = nextTable[state.activeRow];
-    guess = _.filter(rowToScore, cell => cell.value !== undefined).reduce((a,v) => a + v.value, '');
-    return guess;
-}
-
 function score(target, guess, start, len) {
     var targetMatch = '';
     var guessMatch = '';
@@ -93,11 +69,23 @@ const ScoreCell = (props) => {
 };
 
 const GuessRow = (props) => {
+    // classify values based on my row configuration
+    var values = [], outofbounds, invalue;
+    for (var i=0;i<props.spec.totalLength;i++) {
+        // is this an unused cell?  I.E. The index is before or after the guess region
+        outofbounds = i < props.spec.startIx || i >= props.spec.startIx + props.spec.guessLength;
+        // if in the bounds of the guess, does that guess have a value yet?
+        invalue = props.spec.value && (i-props.spec.startIx) < props.spec.value.length
+
+        values.push(outofbounds ? undefined :
+                        invalue ? props.spec.value.charAt(i - props.spec.startIx) : null);
+    }
+
     return (
         <div className="row">
-            { props.spec.map( (cell, index) => {
-                if (cell.value === undefined) return <UnusedCell key={index} />;
-                else return <GuessCell key={index} value={cell.value}/>; })
+            { values.map( (value, index) => {
+                if (value === undefined) return <UnusedCell key={index} />;
+                else return <GuessCell key={index} value={value} />; })
             }
             <ScoreCell score={props.score} />
         </div>
@@ -118,47 +106,37 @@ const GameTable = (props) => {
 class MyWordApp extends React.Component {
 
     state = { activeRow: 0,
-              activeCell: 0,
               completed: false,
               targetWord: 'grapes', // TODO: initialize with random choice
               score: [null,null, null, null, null, null, null, null, null, null, null],
-             tableModel: [[{value: null, start:true},{value: null, last:true},{},{},{},{}],
-                          [{value: null, start:true},{value: null},{value: null, last:true},{},{},{}],
-                          [{},{value: null, start:true},{value: null},{value: null, last:true},{},{}],
-                          [{},{},{value: null, start:true},{value: null},{value: null, last:true},{}],
-                          [{},{},{},{value: null, start:true},{value: null},{value: null, last:true}],
-                          [{},{},{value: null, start:true},{value: null},{value: null},{value: null, last:true}],
-                          [{},{value: null, start:true},{value: null},{value: null},{value: null, last:true},{}],
-                          [{value: null, start:true},{value: null},{value: null},{value: null, last:true},{},{}],
-                          [{value: null, start:true},{value: null},{value: null},{value: null},{value: null, last:true},{}],
-                          [{},{value: null, start:true},{value: null},{value: null},{value: null},{value: null, last:true}],
-                          [{value: null, start:true},{value: null},{value: null},{value: null},{value: null},{value: null, last:true, complete:true}]]
+              tableModel: [{value: null, startIx: 0, guessLength: 2, totalLength:6},
+                           {value: null, startIx: 0, guessLength: 3, totalLength:6},
+                           {value: null, startIx: 1, guessLength: 3, totalLength:6},
+                           {value: null, startIx: 2, guessLength: 3, totalLength:6},
+                           {value: null, startIx: 3, guessLength: 3, totalLength:6},
+                           {value: null, startIx: 2, guessLength: 4, totalLength:6},
+                           {value: null, startIx: 1, guessLength: 4, totalLength:6},
+                           {value: null, startIx: 0, guessLength: 4, totalLength:6},
+                           {value: null, startIx: 0, guessLength: 5, totalLength:6},
+                           {value: null, startIx: 1, guessLength: 5, totalLength:6},
+                           {value: null, startIx: 0, guessLength: 6, totalLength:6}]
     };
 
-    computeNextLocation = (currentState, nextTable) => {
-        var nextCellIx, nextRowIx,
-            currentCell = currentState.tableModel[currentState.activeRow][currentState.activeCell],
-            completed = false,
-            nextScore = _.cloneDeep(currentState.score);
+    computeNextLocation = (currentState, currentGuess) => {
 
-        if (currentCell.complete) {
-            completed = true;
-            nextCellIx = currentState.activeCell;
-            nextRowIx = currentState.activeRow;
-        } else if (currentCell.last) {
-            // move to next line and score
-            nextRowIx = currentState.activeRow + 1;
-            nextCellIx = getRowStartIndex(currentState.tableModel[nextRowIx]); 
-            nextScore[currentState.activeRow] = score(currentState.targetWord, getGuess(currentState, nextTable), getCurrentStartIndex(currentState), getCurrentGuessLength(currentState));
-            
-        } else {
-            nextCellIx = currentState.activeCell + 1;
-            nextRowIx = currentState.activeRow;
+        var nextScore = _.cloneDeep(currentState.score),
+            currentRow = currentState.tableModel[currentState.activeRow],
+            isRowComplete = currentGuess && currentGuess.length === currentRow.guessLength,
+            isGameComplete = isRowComplete && currentState.activeRow === currentState.tableModel.length - 1,
+            nextRowIx = isRowComplete && !isGameComplete ? currentState.activeRow + 1 : currentState.activeRow;
+
+        if (isRowComplete) {
+            // whether the end of the game or not
+            nextScore[currentState.activeRow] = score(currentState.targetWord, currentGuess, currentRow.startIx, currentRow.guessLength);
         }
 
         return { activeRow: nextRowIx,
-                 activeCell: nextCellIx,
-                 completed: completed,
+                 completed: isGameComplete,
                  score: nextScore};
     }
 
@@ -166,12 +144,15 @@ class MyWordApp extends React.Component {
         event.preventDefault();
         console.log('entered', event.key);
         // TODO: check for valid entries
+
         // TODO: backspace to clear an error within a row
         this.setState((currentState) => {
-            // TODO: score when the row is full
-            var newtable = _.cloneDeep(currentState.tableModel);
-            newtable[currentState.activeRow][currentState.activeCell].value = event.key;
-            return _.merge({tableModel: newtable}, this.computeNextLocation(currentState, newtable));
+            var newTable = _.cloneDeep(currentState.tableModel),
+                row = newTable[currentState.activeRow],
+                newValue = row.value === null ? event.key : row.value + event.key;
+
+            newTable[currentState.activeRow].value = newValue;
+            return _.merge({tableModel: newTable}, this.computeNextLocation(currentState, newValue));
         });
     };
 
