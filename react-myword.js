@@ -37,8 +37,7 @@ function fetchWordLists() {
     var p = new Promise(function(resolve, reject) {
         var x1 = new XMLHttpRequest();
         x1.addEventListener('load', function () {
-            sixWords = eval(x1.responseText);
-            resolve();
+            resolve(eval(x1.responseText));
         });
         x1.open('GET', 'sixes.json');
         x1.overrideMimeType('application/json');
@@ -257,6 +256,14 @@ class MyWordApp extends React.Component {
             </div>
         );
     }
+
+    componentDidMount = () => {
+        fetchWordLists().then(pickWord).then((word) => {
+            this.setState(currentState => {
+                return {targetWord: word};
+            });
+        });
+    };
 }
 
 ReactDOM.render(<MyWordApp />, document.querySelector('#main-container'));
