@@ -154,6 +154,18 @@ class LetterSelector extends React.Component {
     }
 }
 
+const FinalAnswerDisplay = (props) => {
+    if (props.completed) {
+        return (
+            <div className="theAnswer">The Answer Was: {props.targetWord} </div>
+        );
+    } else {
+        return (
+            <div> </div>
+        );
+    }
+};
+
 class MyWordApp extends React.Component {
 
     state = { activeRow: 0,
@@ -252,6 +264,7 @@ class MyWordApp extends React.Component {
         return (
             <div>
                 <GameTable model={this.state.tableModel} score={this.state.score} />
+                <FinalAnswerDisplay completed={this.state.completed} targetWord={this.state.targetWord}/>
                 <LetterSelector onSelect={this.handleEntry} />
             </div>
         );
