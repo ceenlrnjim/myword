@@ -240,9 +240,9 @@ class MyWordApp extends React.Component {
     };
 
     handleEntry = (event) => {
-        if (event.key === 'Del') {
+        if (event.key === 'Del' || event.key === 'Backspace') {
             this.handleBackspace();
-        } else if (event.key === 'Go') {
+        } else if (event.key === 'Go' || event.keyCode === 13) {
             if (this.isRowComplete()) {
                 this.scoreCurrentRow();
             }
@@ -276,6 +276,8 @@ class MyWordApp extends React.Component {
                 return {targetWord: word};
             });
         });
+
+        window.addEventListener('keydown', this.handleEntry);
     };
 }
 
