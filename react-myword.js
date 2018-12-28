@@ -103,6 +103,58 @@ const GameTable = (props) => {
     );
 }
 
+const Letter = (props) => {
+    const handler = () => { props.onSelect(props.value) };
+    return (
+        <li className="keyletter" 
+             onClick={handler} 
+             onTouch={handler}>
+            {props.value}
+        </li>
+    );
+}
+
+class LetterSelector extends React.Component {
+    handleSelect = value => {
+        this.props.onSelect({key:value});
+    };
+
+    render() {
+        return (
+            <ul className="keyboard">
+                <li className="keyletter" onClick={() => this.handleSelect('q')} onTouch={() => this.handleSelect('q')}>q</li>
+                <li className="keyletter" onClick={() => this.handleSelect('w')} onTouch={() => this.handleSelect('w')}>w</li>
+                <li className="keyletter" onClick={() => this.handleSelect('e')} onTouch={() => this.handleSelect('e')}>e</li>
+                <li className="keyletter" onClick={() => this.handleSelect('r')} onTouch={() => this.handleSelect('r')}>r</li>
+                <li className="keyletter" onClick={() => this.handleSelect('t')} onTouch={() => this.handleSelect('t')}>t</li>
+                <li className="keyletter" onClick={() => this.handleSelect('y')} onTouch={() => this.handleSelect('y')}>y</li>
+                <li className="keyletter" onClick={() => this.handleSelect('u')} onTouch={() => this.handleSelect('u')}>u</li>
+                <li className="keyletter" onClick={() => this.handleSelect('i')} onTouch={() => this.handleSelect('i')}>i</li>
+                <li className="keyletter" onClick={() => this.handleSelect('o')} onTouch={() => this.handleSelect('o')}>o</li>
+                <li className="keyletter" onClick={() => this.handleSelect('p')} onTouch={() => this.handleSelect('p')}>p</li>
+                <li className="keyletter" onClick={() => this.handleSelect('a')} onTouch={() => this.handleSelect('a')}>a</li>
+                <li className="keyletter" onClick={() => this.handleSelect('s')} onTouch={() => this.handleSelect('s')}>s</li>
+                <li className="keyletter" onClick={() => this.handleSelect('d')} onTouch={() => this.handleSelect('d')}>d</li>
+                <li className="keyletter" onClick={() => this.handleSelect('f')} onTouch={() => this.handleSelect('f')}>f</li>
+                <li className="keyletter" onClick={() => this.handleSelect('g')} onTouch={() => this.handleSelect('g')}>g</li>
+                <li className="keyletter" onClick={() => this.handleSelect('h')} onTouch={() => this.handleSelect('h')}>h</li>
+                <li className="keyletter" onClick={() => this.handleSelect('j')} onTouch={() => this.handleSelect('j')}>j</li>
+                <li className="keyletter" onClick={() => this.handleSelect('k')} onTouch={() => this.handleSelect('k')}>k</li>
+                <li className="keyletter" onClick={() => this.handleSelect('l')} onTouch={() => this.handleSelect('l')}>l</li>
+                <li className="spacer"></li>
+                <li className="keyletter" onClick={() => this.handleSelect('z')} onTouch={() => this.handleSelect('z')}>z</li>
+                <li className="keyletter" onClick={() => this.handleSelect('x')} onTouch={() => this.handleSelect('x')}>x</li>
+                <li className="keyletter" onClick={() => this.handleSelect('c')} onTouch={() => this.handleSelect('c')}>c</li>
+                <li className="keyletter" onClick={() => this.handleSelect('v')} onTouch={() => this.handleSelect('v')}>v</li>
+                <li className="keyletter" onClick={() => this.handleSelect('b')} onTouch={() => this.handleSelect('b')}>b</li>
+                <li className="keyletter" onClick={() => this.handleSelect('n')} onTouch={() => this.handleSelect('n')}>n</li>
+                <li className="keyletter" onClick={() => this.handleSelect('m')} onTouch={() => this.handleSelect('m')}>m</li>
+                <li className="keyletter" onClick={() => this.handleSelect('Del')} onTouch={() => this.handleSelect('Del')}>Del</li>
+            </ul>
+       );
+    }
+}
+
 class MyWordApp extends React.Component {
 
     state = { activeRow: 0,
@@ -141,7 +193,7 @@ class MyWordApp extends React.Component {
     }
 
     handleEntry = (event) => {
-        event.preventDefault();
+        //event.preventDefault();
         console.log('entered', event.key);
         // TODO: check for valid entries
 
@@ -159,15 +211,18 @@ class MyWordApp extends React.Component {
 
     render() {
         return (
-            <GameTable model={this.state.tableModel} score={this.state.score} />
+            <div>
+                <GameTable model={this.state.tableModel} score={this.state.score} />
+                <LetterSelector onSelect={this.handleEntry} />
+            </div>
         );
     }
 
     componentDidMount() {
-        window.addEventListener('keydown', this.handleEntry);
+        //window.addEventListener('keydown', this.handleEntry);
     }
     componentWillUnmount() {
-        window.removeEventListener('keydown', this.handleEntry);
+        //window.removeEventListener('keydown', this.handleEntry);
     }
 }
 
