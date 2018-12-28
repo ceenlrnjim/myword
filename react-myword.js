@@ -97,7 +97,6 @@ const GuessRow = (props) => {
 const GameTable = (props) => {
     return (
         <div className="table">
-        {console.log(props.model) }
             { props.model.map( (row, index) => <GuessRow key={index} spec={row} score={props.score[index]} /> ) }
         </div>
     );
@@ -142,6 +141,7 @@ class LetterSelector extends React.Component {
                 <li className="keyletter" onClick={() => this.handleSelect('k')} onTouch={() => this.handleSelect('k')}>k</li>
                 <li className="keyletter" onClick={() => this.handleSelect('l')} onTouch={() => this.handleSelect('l')}>l</li>
                 <li className="spacer"></li>
+                <li className="keyletter" onClick={() => this.handleSelect('Del')} onTouch={() => this.handleSelect('Del')}>Del</li>
                 <li className="keyletter" onClick={() => this.handleSelect('z')} onTouch={() => this.handleSelect('z')}>z</li>
                 <li className="keyletter" onClick={() => this.handleSelect('x')} onTouch={() => this.handleSelect('x')}>x</li>
                 <li className="keyletter" onClick={() => this.handleSelect('c')} onTouch={() => this.handleSelect('c')}>c</li>
@@ -149,7 +149,7 @@ class LetterSelector extends React.Component {
                 <li className="keyletter" onClick={() => this.handleSelect('b')} onTouch={() => this.handleSelect('b')}>b</li>
                 <li className="keyletter" onClick={() => this.handleSelect('n')} onTouch={() => this.handleSelect('n')}>n</li>
                 <li className="keyletter" onClick={() => this.handleSelect('m')} onTouch={() => this.handleSelect('m')}>m</li>
-                <li className="keyletter" onClick={() => this.handleSelect('Del')} onTouch={() => this.handleSelect('Del')}>Del</li>
+                <li className="keyletter" onClick={() => this.handleSelect('Go')} onTouch={() => this.handleSelect('Go')}>Go</li>
             </ul>
        );
     }
@@ -174,6 +174,7 @@ class MyWordApp extends React.Component {
                            {value: null, startIx: 0, guessLength: 6, totalLength:6}]
     };
 
+
     computeNextLocation = (currentState, currentGuess) => {
 
         var nextScore = _.cloneDeep(currentState.score),
@@ -190,24 +191,63 @@ class MyWordApp extends React.Component {
         return { activeRow: nextRowIx,
                  completed: isGameComplete,
                  score: nextScore};
-    }
+    };
 
-    handleEntry = (event) => {
-        //event.preventDefault();
-        console.log('entered', event.key);
-        // TODO: check for valid entries
+    scoreCurrentRow = () => {
+        this.setState(currentState => {
+            var nextScore = _.cloneDeep(currentState.score),
+                currentRow = currentState.tableModel[currentState.activeRow],
+                isGameComplete = currentState.activeRow === currentState.tableModel.length - 1,
+                nextRowIx = !isGameComplete ? currentState.activeRow + 1 : currentState.activeRow;
 
-        // TODO: backspace to clear an error within a row
-        this.setState((currentState) => {
-            var newTable = _.cloneDeep(currentState.tableModel),
-                row = newTable[currentState.activeRow],
-                newValue = row.value === null ? event.key : row.value + event.key;
+            nextScore[currentState.activeRow] = score(currentState.targetWord, currentRow.value, currentRow.startIx, currentRow.guessLength);
 
-            newTable[currentState.activeRow].value = newValue;
-            return _.merge({tableModel: newTable}, this.computeNextLocation(currentState, newValue));
+            return {activeRow: nextRowIx, score: nextScore, completed: isGameComplete};
         });
     };
 
+    isRowComplete = () => {
+        var row = this.state.tableModel[this.state.activeRow];
+        return row.value && row.value.length === row.guessLength;
+    };
+
+    isGameComplete = () => { return this.state.completed };
+
+    handleBackspace = () => {
+        this.setState((currentState) => {
+            var row = currentState.tableModel[currentState.activeRow];
+            if (row.value && row.value.length > 0) {
+                return { tableModel: this.updateValueIn(currentState, row.value.substring(0, row.value.length - 1)) };
+            }
+        });
+    };
+
+    updateValueIn = (currentState, value) => {
+        var newTable = _.cloneDeep(currentState.tableModel);
+        newTable[currentState.activeRow].value = value;
+        return newTable;
+    };
+
+    handleEntry = (event) => {
+        if (event.key === 'Del') {
+            this.handleBackspace();
+        } else if (event.key === 'Go') {
+            if (this.isRowComplete()) {
+                this.scoreCurrentRow();
+            }
+        } else if (!this.isRowComplete()) {
+            this.updateStateWithKey(event.key);
+        }
+    };
+
+    updateStateWithKey = (key) => {
+        this.setState((currentState) => {
+            var row = currentState.tableModel[currentState.activeRow],
+                newTable = this.updateValueIn(currentState, row.value === null ? key : row.value + key);
+
+            return {tableModel: newTable};
+        });
+    };
 
     render() {
         return (
@@ -216,13 +256,6 @@ class MyWordApp extends React.Component {
                 <LetterSelector onSelect={this.handleEntry} />
             </div>
         );
-    }
-
-    componentDidMount() {
-        //window.addEventListener('keydown', this.handleEntry);
-    }
-    componentWillUnmount() {
-        //window.removeEventListener('keydown', this.handleEntry);
     }
 }
 
