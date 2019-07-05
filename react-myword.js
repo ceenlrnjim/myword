@@ -282,3 +282,4 @@ class MyWordApp extends React.Component {
 }
 
 ReactDOM.render(<MyWordApp />, document.querySelector('#main-container'));
+
