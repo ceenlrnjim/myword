@@ -1,3 +1,13 @@
+body {
+    display:flex;
+    justify-content: center;
+}
+
+.mainArea {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 .table {
     display: table;
@@ -26,6 +36,8 @@
     width: 100px;
 }
 .keyboard {
+    display:flex;
+    justify-content: center;
     margin: 0;
     padding: 10px;
     list-style: none;
