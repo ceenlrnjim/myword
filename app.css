@@ -15,14 +15,12 @@ body {
 }
 
 .board__row {
-    display:flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 3fr
 }
 
 .board__row_cells {
-    display: flex;
-    flex-direction: row;
-    flex-grow:2;
+    display: grid;
 }
 
 .board_row_guess {
@@ -31,8 +29,14 @@ body {
     border-width: 1px;
     border-color: #000000;
     border-style: solid;
-    flex-grow: 2;
 }
+
+.board_row_guess p {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 .board_row_background {
     aspect-ratio: 1/1;
@@ -40,12 +44,10 @@ body {
     border-width: 1px;
     border-color: #AAAAAA;
     border-style: solid;
-    flex-grow: 2;
 }
 
 .board__row_score {
     border: 1px solid black;
-    flex-grow:1;
 }
 
 .keyboard {
@@ -63,9 +65,15 @@ body {
 }
 
 .keyboard__row__key {
+    font-family: arial;
+    font-weight: bold;
+    margin-top: 2px;
     border: 1px black solid;
-    min-width: 14%;
-    aspect-ratio: 1/1;
-    text-align: center;
+    aspect-ratio: 6/6;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10%;
 }
 
