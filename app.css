@@ -1,32 +1,28 @@
+
 body {
     display: flex;
     justify-content: center;
+    height: 100%;
 }
 
 .game-wrapper {
-    width: 40%;
-    aspect-ratio: 1/1;
+    height: 100%;
+    aspect-ratio: 9/16;
 }
 
 .board {
-    width:100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%;
 }
 
 .board__row {
-    width:100%;
-    display: flex;
+    display:flex;
     flex-direction: row;
 }
 
 .board__row_cells {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
-    flex-grow: 2;
+    flex-grow:2;
 }
 
 .board_row_guess {
@@ -40,16 +36,16 @@ body {
 
 .board_row_background {
     aspect-ratio: 1/1;
-    background-color: #555555;
+    background-color: #AAAAAA;
     border-width: 1px;
-    border-color: #555555;
+    border-color: #AAAAAA;
     border-style: solid;
     flex-grow: 2;
 }
 
 .board__row_score {
     border: 1px solid black;
-    flex-grow: 1;
+    flex-grow:1;
 }
 
 .keyboard {
@@ -58,6 +54,7 @@ body {
     flex-direction: column;
     width: 100%;
 }
+
 .keyboard__row {
     display: flex;
     flex-direction: row;
@@ -71,3 +68,4 @@ body {
     aspect-ratio: 1/1;
     text-align: center;
 }
+
