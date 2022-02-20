@@ -1,42 +1,47 @@
 
 function Keyboard(props) {
+    const letterPressHandler = (event) => props.onLetterGuess(event.target.textContent);
+    const enterPressHandler = () => props.onEnterGuess();
+    const backPressHandler = () => props.onBackSpace();
+
+
     return  (
-        <div class="keyboard">
-            <div class="keyboard__row"> 
-                <button class="keyboard__row__key">Q</button>
-                <button class="keyboard__row__key">W</button>
-                <button class="keyboard__row__key">E</button>
-                <button class="keyboard__row__key">R</button>
-                <button class="keyboard__row__key">T</button>
-                <button class="keyboard__row__key">Y</button>
-                <button class="keyboard__row__key">U</button>
-                <button class="keyboard__row__key">I</button>
-                <button class="keyboard__row__key">O</button>
-                <button class="keyboard__row__key">P</button>
+        <div className="keyboard">
+            <div className="keyboard__row"> 
+                <button className="keyboard__row__key" onClick={letterPressHandler}>Q</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>W</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>E</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>R</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>T</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>Y</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>U</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>I</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>O</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>P</button>
             </div>
-            <div class="keyboard__row">
-                <button class="keyboard__row__key">A</button>
-                <button class="keyboard__row__key">S</button>
-                <button class="keyboard__row__key">D</button>
-                <button class="keyboard__row__key">F</button>
-                <button class="keyboard__row__key">G</button>
-                <button class="keyboard__row__key">H</button>
-                <button class="keyboard__row__key">J</button>
-                <button class="keyboard__row__key">K</button>
-                <button class="keyboard__row__key">L</button>
+            <div className="keyboard__row">
+                <button className="keyboard__row__key" onClick={letterPressHandler}>A</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>S</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>D</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>F</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>G</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>H</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>J</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>K</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>L</button>
             </div>
-            <div class="keyboard__row">
-                <button class="keyboard__row__key">Enter</button>
-                <button class="keyboard__row__key">Z</button>
-                <button class="keyboard__row__key">X</button>
-                <button class="keyboard__row__key">C</button>
-                <button class="keyboard__row__key">V</button>
-                <button class="keyboard__row__key">B</button>
-                <button class="keyboard__row__key">N</button>
-                <button class="keyboard__row__key">M</button>
-                <button class="keyboard__row__key">Back</button>
+            <div className="keyboard__row">
+                <button className="keyboard__row__key" onClick={enterPressHandler}>Enter</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>Z</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>X</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>C</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>V</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>B</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>N</button>
+                <button className="keyboard__row__key" onClick={letterPressHandler}>M</button>
+                <button className="keyboard__row__key" onClick={backPressHandler}>Back</button>
             </div>
-            <div class="keyboard__row">
+            <div className="keyboard__row">
             </div>
         </div>
     );
