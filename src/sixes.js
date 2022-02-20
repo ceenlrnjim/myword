@@ -1,4 +1,4 @@
-["people"
+const sixLetterList = ["people"
 ,"should"
 ,"school"
 ,"become"
@@ -789,4 +789,6 @@
 ,"vacuum"
 ,"sensor"
 ,"manual"
-,"pistol"]
+,"pistol"];
+
+export default sixLetterList;

@@ -56,7 +56,12 @@
 
 .board__row_score {
     border: 1px solid #AAAAAA;
-    grid-gap:2px;
+    font-family: Arial;
+    font-size:  20pt;
+    font-weight: bold;
+    display:flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .keyboard {

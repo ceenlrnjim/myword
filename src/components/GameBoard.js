@@ -2,19 +2,17 @@ import GuessRow from "./GuessRow";
 
 function GameBoard(props) {
     // TODO: 6 and 7 version?
+    const rows = [];
+    for (var i=1;i<12;i++) {
+        rows[i] = <GuessRow key={i} 
+                    rangeStart={props.gameState['row'+i].start} 
+                    rangeLength={props.gameState['row'+i].length} 
+                    guess={props.gameState['row'+i].value} 
+                    score={props.gameState['row'+i].score}/>
+    }
     return ( 
         <div className="board">
-            <GuessRow rangeStart="0" rangeLength="2"/>
-            <GuessRow rangeStart="0" rangeLength="3"/>
-            <GuessRow rangeStart="1" rangeLength="3"/>
-            <GuessRow rangeStart="2" rangeLength="3"/>
-            <GuessRow rangeStart="3" rangeLength="3"/>
-            <GuessRow rangeStart="2" rangeLength="4"/>
-            <GuessRow rangeStart="1" rangeLength="4"/>
-            <GuessRow rangeStart="0" rangeLength="4"/>
-            <GuessRow rangeStart="0" rangeLength="5"/>
-            <GuessRow rangeStart="1" rangeLength="5"/>
-            <GuessRow rangeStart="0" rangeLength="6"/>
+            {rows}   
         </div>
     );
 
