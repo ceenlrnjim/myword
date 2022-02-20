@@ -1,0 +1,27 @@
+.board_row_guess {
+    aspect-ratio: 1/1;
+    background-color: #FFFFFF;
+    border-width: 1px;
+    border-color: #AAAAAA;
+    border-style: solid;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board_row_guess p {
+    font-family: Arial;
+    font-size:  20pt;
+    font-weight: bold;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.board_row_background {
+    aspect-ratio: 1/1;
+    background-color: #AAAAAA;
+    border-width: 1px;
+    border-color: #AAAAAA;
+    border-style: solid;
+}

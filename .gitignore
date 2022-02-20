@@ -23,3 +23,7 @@ github_info.txt
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#./app.css
+#./myword.html
+#./flexbox_layout.css 

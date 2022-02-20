@@ -1,0 +1,16 @@
+.board__row {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    column-gap: 5px;
+}
+
+
+.board__row_cells {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr
+}
+
+
+.board__row_score {
+    border: 1px solid #AAAAAA;
+}
