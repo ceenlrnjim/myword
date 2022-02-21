@@ -1,11 +1,12 @@
 import {useState} from 'react';
 import sixLetterWords from './sixes';
+import computeScore from './components/Scoring';
 import './App.css';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
 
 const initialState = {
-  targetWord: 'grapes',
+  targetWord: 'GRAPES',
   currentRow: 1,
   gameOver: false,
   rowComplete: false,
@@ -54,8 +55,9 @@ function App() {
     if (gameState.rowComplete) {
       // TODO: compute score
       setGameState(prevState => {
-        const score = 100;
         const [newState, row] = bootstrapNewState(prevState);
+        const score = computeScore(gameState.targetWord, newState[row].value, newState[row].start, newState[row].length);
+        console.log("scoring:",gameState.targetWord, newState[row].value, newState[row].start, newState[row].length, score);
         newState[row] = {...newState[row], score: score};
         newState.rowEmpty = true;
         newState.rowComplete = false;
