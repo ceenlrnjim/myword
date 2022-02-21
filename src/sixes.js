@@ -1,4 +1,8 @@
-const sixLetterList = ["people"
+function pickWord() {
+    return words[Math.floor(Math.random() * (words.length))].toUpperCase();
+}
+
+const words = ["people"
 ,"should"
 ,"school"
 ,"become"
@@ -791,4 +795,4 @@ const sixLetterList = ["people"
 ,"manual"
 ,"pistol"];
 
-export default sixLetterList;
+export default pickWord;

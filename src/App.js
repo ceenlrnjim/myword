@@ -1,12 +1,14 @@
 import {useState} from 'react';
-import sixLetterWords from './sixes';
+import pickWord from './sixes';
 import computeScore from './components/Scoring';
 import './App.css';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
+import EndGameModal from './components/EndGameModal';
 
 const initialState = {
-  targetWord: 'GRAPES',
+  targetWord: pickWord(),
+  totalScore: 0,
   currentRow: 1,
   gameOver: false,
   rowComplete: false,
@@ -57,7 +59,7 @@ function App() {
       setGameState(prevState => {
         const [newState, row] = bootstrapNewState(prevState);
         const score = computeScore(gameState.targetWord, newState[row].value, newState[row].start, newState[row].length);
-        console.log("scoring:",gameState.targetWord, newState[row].value, newState[row].start, newState[row].length, score);
+        newState.totalScore += score;
         newState[row] = {...newState[row], score: score};
         newState.rowEmpty = true;
         newState.rowComplete = false;
@@ -82,6 +84,7 @@ function App() {
 
   return (
     <div className="game-wrapper">
+      {gameState.gameOver && <EndGameModal answer={gameState.targetWord} score={gameState.totalScore}/>}
       <GameBoard gameState={gameState}/>
       <Keyboard 
         enterEnabled={gameState.rowComplete && !gameState.gameOver}
