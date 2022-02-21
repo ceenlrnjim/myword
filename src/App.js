@@ -23,15 +23,17 @@ const initialState = {
   row11: { value:'', start:0, length: 6}
 }
 
+function bootstrapNewState(prevState) {
+  const newState = {...prevState};
+  const row = 'row' + newState.currentRow;
+  return [newState, row];
+}
+
 function stateWithModifiedValue(prevState, modifier, score) {
-    const newState = {...prevState};
-    const row = 'row' + newState.currentRow;
+    const [newState, row] = bootstrapNewState(prevState); 
     newState[row] = {...newState[row], value: modifier(newState[row].value)};
     newState.rowEmpty = (newState[row].value.length === 0);
     newState.rowComplete = (newState[row].value.length === newState[row].length);
-    if (score !== undefined) {
-      newState[row].score = score;
-    }
     console.log('Updating ', row, newState[row].value, 'complete:', newState.rowComplete, 'empty:', newState.rowEmpty);
     return newState;
 
@@ -53,7 +55,8 @@ function App() {
       // TODO: compute score
       setGameState(prevState => {
         const score = 100;
-        const newState = stateWithModifiedValue(prevState, v => v, score);
+        const [newState, row] = bootstrapNewState(prevState);
+        newState[row] = {...newState[row], score: score};
         newState.rowEmpty = true;
         newState.rowComplete = false;
         if (newState.currentRow < 11) {

@@ -1,9 +1,27 @@
-// TODO: need keypress handler
+import {useEffect} from 'react';
+
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function isLetter(key) {
+    return key.length === 1 && letters.indexOf(key.toUpperCase()) >= 0;
+}
+
 function Keyboard(props) {
     const letterPressHandler = (event) => props.onLetterGuess(event.target.textContent);
     const enterPressHandler = () => props.onEnterGuess();
     const backPressHandler = () => props.onBackSpace();
 
+    useEffect(() => {
+        document.body.onkeydown = function(event) {
+            console.log(event);
+            if (event.key === 'Del' || event.key === 'Backspace') {
+                props.onBackSpace();
+            } else if (event.key === 'Go' || event.key === 'Enter') {
+                props.onEnterGuess();
+            } else if (isLetter(event.key)) {
+                props.onLetterGuess(event.key.toUpperCase());
+            }
+        }
+    });
 
     return  (
         <div className="keyboard">
