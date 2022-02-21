@@ -12,7 +12,6 @@ function Keyboard(props) {
 
     useEffect(() => {
         document.body.onkeydown = function(event) {
-            console.log(event);
             if (event.key === 'Del' || event.key === 'Backspace') {
                 props.onBackSpace();
             } else if (event.key === 'Go' || event.key === 'Enter') {

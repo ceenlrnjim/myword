@@ -37,7 +37,6 @@ function stateWithModifiedValue(prevState, modifier, score) {
     newState[row] = {...newState[row], value: modifier(newState[row].value)};
     newState.rowEmpty = (newState[row].value.length === 0);
     newState.rowComplete = (newState[row].value.length === newState[row].length);
-    console.log('Updating ', row, newState[row].value, 'complete:', newState.rowComplete, 'empty:', newState.rowEmpty);
     return newState;
 
 }
