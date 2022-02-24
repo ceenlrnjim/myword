@@ -5,6 +5,7 @@ import './App.css';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
 import EndGameModal from './components/EndGameModal';
+import NoteTracker from './components/NoteTracker';
 
 const initialState = {
   targetWord: pickWord(),
@@ -82,15 +83,18 @@ function App() {
   }
 
   return (
-    <div className="game-wrapper">
-      {gameState.gameOver && <EndGameModal answer={gameState.targetWord} score={gameState.totalScore}/>}
-      <GameBoard gameState={gameState}/>
-      <Keyboard 
-        enterEnabled={gameState.rowComplete && !gameState.gameOver}
-        backEnabled={!gameState.rowEmpty && !gameState.gameOver}
-        onLetterGuess={guessHandler} 
-        onEnterGuess={enterGuessHandler} 
-        onBackSpace={backSpaceHandler}/>
+    <div className="top_wrapper">
+      <div className="game_wrapper">
+        {gameState.gameOver && <EndGameModal answer={gameState.targetWord} score={gameState.totalScore}/>}
+        <GameBoard gameState={gameState}/>
+        <Keyboard 
+          enterEnabled={gameState.rowComplete && !gameState.gameOver}
+          backEnabled={!gameState.rowEmpty && !gameState.gameOver}
+          onLetterGuess={guessHandler} 
+          onEnterGuess={enterGuessHandler} 
+          onBackSpace={backSpaceHandler}/>
+      </div>
+      <NoteTracker/>
     </div>
   );
 }

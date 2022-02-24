@@ -4,8 +4,13 @@
     height: 100%;
 
 }
+.top_wrapper {
+    height: 100%;
+    display:flex;
+    justify-content: center;
+}
 
-.game-wrapper {
+.game_wrapper {
     height: 100%;
     aspect-ratio: 9/16;
 }
@@ -112,5 +117,25 @@
     font-family: arial;
     font-weight: bold;
     font-size:  28pt;
+    color: white;
+}
+
+.note_tracker {
+    height:100%;
+}
+
+.note_tracker_row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    margin-left:10px;
+}
+
+.note_tracker_row_letter {
+    font-family: Arial;
+    font-size:  18;
+}
+
+.strikethrough {
+    text-decoration: line-through;
     color: white;
 }
