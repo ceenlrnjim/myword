@@ -139,3 +139,11 @@
     text-decoration: line-through;
     color: white;
 }
+
+.notes_toggle {
+    grid-column: 1/6;
+}
+
+.hidden {
+    display: none;
+}
