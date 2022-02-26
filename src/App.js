@@ -44,6 +44,7 @@ function stateWithModifiedValue(prevState, modifier, score) {
 
 function App() {
   const [gameState, setGameState] = useState(initialState);
+  const [showNotes, setShowNotes] = useState(false);
 
   function guessHandler(letter) {
     if (!gameState.rowComplete && !gameState.gameOver) {
@@ -51,6 +52,11 @@ function App() {
         return stateWithModifiedValue(prevState, v => v + letter);
       });
     }
+  }
+
+  function notesToggleHandler() {
+    console.log('toggling notes');
+    setShowNotes((prev) => !prev);
   }
 
   function enterGuessHandler() {
@@ -92,9 +98,10 @@ function App() {
           backEnabled={!gameState.rowEmpty && !gameState.gameOver}
           onLetterGuess={guessHandler} 
           onEnterGuess={enterGuessHandler} 
+          toggleNotes={notesToggleHandler}
           onBackSpace={backSpaceHandler}/>
       </div>
-      <NoteTracker/>
+      <NoteTracker showNotes={showNotes} />
     </div>
   );
 }

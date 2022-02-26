@@ -9,6 +9,10 @@ function Keyboard(props) {
     const letterPressHandler = (event) => props.onLetterGuess(event.target.textContent);
     const enterPressHandler = () => props.onEnterGuess();
     const backPressHandler = () => props.onBackSpace();
+    const notesHandler = (event) => {
+        event.target.blur();
+        props.toggleNotes();
+    }
 
     useEffect(() => {
         document.body.onkeydown = function(event) {
@@ -57,6 +61,7 @@ function Keyboard(props) {
                 <button className="keyboard__row__key" onClick={letterPressHandler}>N</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>M</button>
                 <button className="keyboard__row__key" onClick={backPressHandler} disabled={!props.backEnabled}>Back</button>
+                <button className="keyboard__row__key" onClick={notesHandler} type="button">Notes</button>
             </div>
             <div className="keyboard__row">
             </div>
