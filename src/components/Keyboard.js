@@ -14,19 +14,20 @@ function Keyboard(props) {
         props.toggleNotes();
     }
 
+    const {onBackSpace, onEnterGuess, onLetterGuess} = props;
+
     useEffect(() => {
-        // TODO: these props don't change dynamically so this is ok, but could add them as dependencies
-        // and remove the old listener in cleanup, to get rid of the warning
         document.body.onkeydown = function(event) {
             if (event.key === 'Del' || event.key === 'Backspace') {
-                props.onBackSpace();
+                onBackSpace();
             } else if (event.key === 'Go' || event.key === 'Enter') {
-                props.onEnterGuess();
+                onEnterGuess();
             } else if (isLetter(event.key)) {
-                props.onLetterGuess(event.key.toUpperCase());
+                onLetterGuess(event.key.toUpperCase());
             }
         }
-    },[]);
+        // these never really change in this application, but want to get rid of the warning
+    },[onBackSpace, onEnterGuess, onLetterGuess]);
 
     return  (
         <div className="keyboard">
