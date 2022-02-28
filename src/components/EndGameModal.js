@@ -1,5 +1,5 @@
 function EndGameModal(props) {
-
+    // TODO: "go again" button
     return (
         <div className="end_game_modal_backdrop">
             <div className="end_game_modal">

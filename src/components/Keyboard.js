@@ -15,6 +15,8 @@ function Keyboard(props) {
     }
 
     useEffect(() => {
+        // TODO: these props don't change dynamically so this is ok, but could add them as dependencies
+        // and remove the old listener in cleanup, to get rid of the warning
         document.body.onkeydown = function(event) {
             if (event.key === 'Del' || event.key === 'Backspace') {
                 props.onBackSpace();
