@@ -24,7 +24,7 @@ function Keyboard(props) {
                 props.onLetterGuess(event.key.toUpperCase());
             }
         }
-    });
+    },[]);
 
     return  (
         <div className="keyboard">
