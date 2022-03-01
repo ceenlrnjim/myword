@@ -6,6 +6,7 @@ function isLetter(key) {
 }
 
 function Keyboard(props) {
+    const {onBackSpace, onEnterGuess, onLetterGuess} = props;
     const letterPressHandler = (event) => props.onLetterGuess(event.target.textContent);
     const enterPressHandler = () => props.onEnterGuess();
     const backPressHandler = () => props.onBackSpace();
@@ -14,7 +15,6 @@ function Keyboard(props) {
         props.toggleNotes();
     }
 
-    const {onBackSpace, onEnterGuess, onLetterGuess} = props;
 
     useEffect(() => {
         document.body.onkeydown = function(event) {
