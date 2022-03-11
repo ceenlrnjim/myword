@@ -24,12 +24,25 @@ export const initialState = fromJS({
   }
 });
 
+// Let's get wild
+Map.prototype.rowLength = function() {
+    return this.getIn(['rows',this.get('currentRow'), 'length']);
+}
+
+Map.prototype.rowValue = function() {
+    return this.getIn(['rows',this.get('currentRow'), 'value']);
+}
+
+Map.prototype.rowStart = function() {
+    return this.getIn(['rows',this.get('currentRow'), 'start']);
+}
+
 function enterLetter(gameState, action) {
     if (!gameState.get('rowComplete') && !gameState.get('gameOver')) {
         const currentRow = gameState.get('currentRow');
         const newState = gameState.updateIn(['rows', currentRow, 'value'], value => value + action.letter)
                                     .set('rowEmpty', false)
-                                    .update(me => me.set('rowComplete', me.getIn(['rows', currentRow, 'value']).length === me.getIn(['rows', currentRow,'length'])));
+                                    .update(me => me.set('rowComplete', me.rowValue().length === me.rowLength()));
 
         return newState;
     } else {
@@ -41,9 +54,9 @@ function checkGuess(gameState, action) {
     if (gameState.get('rowComplete')) {
         const currentRow = gameState.get('currentRow');
         const score = computeScore(gameState.get('targetWord'), 
-                                   gameState.getIn(['rows',currentRow, 'value']), 
-                                   gameState.getIn(['rows',currentRow, 'start']), 
-                                   gameState.getIn(['rows',currentRow, 'length']));
+                                   gameState.rowValue(),
+                                   gameState.rowStart(),
+                                   gameState.rowLength());
 
         const newState = gameState.update('totalScore', total => total + score)
                                   .setIn(['rows', currentRow, 'score'], score)
@@ -63,9 +76,9 @@ function checkGuess(gameState, action) {
 function deleteLetter(gameState, action) {
     if (!gameState.get('rowEmpty') && !gameState.get('gameOver')) {
         const currentRow = gameState.get('currentRow');
-        const value = gameState.getIn(['rows', currentRow,'value']);
+        const value = gameState.rowValue();
         const newState = gameState.updateIn(['rows', currentRow, 'value'], v => v.substring(0,v.length-1))
-                                    .set('rowEmpty', value.length === 1)
+                                    .set('rowEmpty', value.length === 1) // if it was 1 before the backspace, it is 0 now so empty
                                     .set('rowComplete', false);
 
         return newState;
