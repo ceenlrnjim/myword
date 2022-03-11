@@ -31,11 +31,11 @@ function App() {
   return (
     <div className="top_wrapper">
       <div className="game_wrapper">
-        {gameState.gameOver && <EndGameModal answer={gameState.targetWord} score={gameState.totalScore}/>}
+        {gameState.get('gameOver') && <EndGameModal answer={gameState.get('targetWord')} score={gameState.get('totalScore')}/>}
         <GameBoard gameState={gameState}/>
         <Keyboard 
-          enterEnabled={gameState.rowComplete && !gameState.gameOver}
-          backEnabled={!gameState.rowEmpty && !gameState.gameOver}
+          enterEnabled={gameState.get('rowComplete') && !gameState.get('gameOver')}
+          backEnabled={!gameState.get('rowEmpty') && !gameState.get('gameOver')}
           onLetterGuess={guessHandler} 
           onEnterGuess={enterGuessHandler} 
           toggleNotes={notesToggleHandler}

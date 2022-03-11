@@ -1,62 +1,57 @@
 import computeScore from './components/Scoring';
 import pickWord from './sixes';
+import {Map,List, fromJS} from 'immutable';
 
-export const initialState = {
+export const initialState = fromJS({
   targetWord: pickWord(),
   totalScore: 0,
-  currentRow: 1,
+  currentRow: 'row1',
   gameOver: false,
   rowComplete: false,
   rowEmpty: true,
-  row1: { value:'', start:0, length: 2},
-  row2: { value:'', start:0, length: 3},
-  row3: { value:'', start:1, length: 3},
-  row4: { value:'', start:2, length: 3},
-  row5: { value:'', start:3, length: 3},
-  row6: { value:'', start:2, length: 4},
-  row7: { value:'', start:1, length: 4},
-  row8: { value:'', start:0, length: 4},
-  row9: { value:'', start:0, length: 5},
-  row10: { value:'', start:1, length: 5},
-  row11: { value:'', start:0, length: 6}
-}
-
-function bootstrapNewState(prevState) {
-  const newState = {...prevState};
-  const row = 'row' + newState.currentRow;
-  return [newState, row];
-}
-
-function stateWithModifiedValue(prevState, modifier, score) {
-    const [newState, row] = bootstrapNewState(prevState); 
-    newState[row] = {...newState[row], value: modifier(newState[row].value)};
-    newState.rowEmpty = (newState[row].value.length === 0);
-    newState.rowComplete = (newState[row].value.length === newState[row].length);
-    return newState;
-}
+  row1: { value:'', start:0, length: 2, nextRow: 'row2'},
+  row2: { value:'', start:0, length: 3, nextRow: 'row3'},
+  row3: { value:'', start:1, length: 3, nextRow: 'row4'},
+  row4: { value:'', start:2, length: 3, nextRow: 'row5'},
+  row5: { value:'', start:3, length: 3, nextRow: 'row6'},
+  row6: { value:'', start:2, length: 4, nextRow: 'row7'},
+  row7: { value:'', start:1, length: 4, nextRow: 'row8'},
+  row8: { value:'', start:0, length: 4, nextRow: 'row9'},
+  row9: { value:'', start:0, length: 5, nextRow: 'rowA'},
+  rowA: { value:'', start:1, length: 5, nextRow: 'rowB'},
+  rowB: { value:'', start:0, length: 6, nextRow: null}
+});
 
 function enterLetter(gameState, action) {
-    if (!gameState.rowComplete && !gameState.gameOver) {
-        return stateWithModifiedValue(gameState, v => v + action.letter);
+    if (!gameState.get('rowComplete') && !gameState.get('gameOver')) {
+        const currentRow = gameState.get('currentRow');
+        const newState = gameState.updateIn([currentRow, 'value'], value => value + action.letter)
+                                    .set('rowEmpty', false)
+                                    .update(me => me.set('rowComplete', me.getIn([currentRow, 'value']).length === me.getIn([currentRow,'length'])));
+
+        return newState;
     } else {
         return gameState;
     }
 }
 
 function checkGuess(gameState, action) {
-    if (gameState.rowComplete) {
-        const [newState, row] = bootstrapNewState(gameState);
-        const score = computeScore(gameState.targetWord, newState[row].value, newState[row].start, newState[row].length);
-        newState.totalScore += score;
-        newState[row] = {...newState[row], score: score};
-        newState.rowEmpty = true;
-        newState.rowComplete = false;
-        if (newState.currentRow < 11) {
-          newState.currentRow += 1;
-        } else {
-          newState.gameOver = true;
-        } 
+    if (gameState.get('rowComplete')) {
+        const currentRow = gameState.get('currentRow');
+        const score = computeScore(gameState.get('targetWord'), 
+                                   gameState.getIn([currentRow, 'value']), 
+                                   gameState.getIn([currentRow, 'start']), 
+                                   gameState.getIn([currentRow, 'length']));
 
+        const newState = gameState.update('totalScore', total => total + score)
+                                  .setIn([currentRow, 'score'], score)
+                                  .set('rowEmpty', true)
+                                  .set('rowComplete', false)
+                                  .update(me => {
+                                      const nextRow = me.getIn([currentRow, 'nextRow']);
+                                      return (nextRow) ? me.set('currentRow', nextRow) : me.set('gameOver', true);
+                                  });
+        
         return newState;
     } else {
         return gameState; // no change
@@ -64,10 +59,16 @@ function checkGuess(gameState, action) {
 }
 
 function deleteLetter(gameState, action) {
-    if (!gameState.rowEmpty && !gameState.gameOver) {
-        return stateWithModifiedValue(gameState, v => v.substring(0,v.length-1));
+    if (!gameState.get('rowEmpty') && !gameState.get('gameOver')) {
+        const currentRow = gameState.get('currentRow');
+        const value = gameState.getIn([currentRow,'value']);
+        const newState = gameState.updateIn([currentRow, 'value'], v => v.substring(0,v.length-1))
+                                    .set('rowEmpty', value.length > 1)
+                                    .set('rowComplete', false);
+
+        return newState;
     } else {
-        return gameState; // no change
+        return gameState;
     }
 }
 
