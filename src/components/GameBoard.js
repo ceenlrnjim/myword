@@ -2,7 +2,7 @@ import GuessRow from "./GuessRow";
 
 function GameBoard(props) {
     // TODO: 6 and 7 version?
-    const rows = props.gameState.filter((v,k) => k.startsWith('row') && k !== 'rowComplete' && k !== 'rowEmpty') // TODO: deal with this
+    const rows = props.gameState.get('rows')
                    .sortBy((v,k) => k, (k1,k2) => k1.localeCompare(k2))
                    .map((rowObj,k) => 
                     <GuessRow key={k}
