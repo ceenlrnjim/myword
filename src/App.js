@@ -1,5 +1,5 @@
-import {useReducer, useState} from 'react';
-import {GameStateReducer, initialState} from './StateLogic';
+import { useState } from 'react';
+import {useSelector, useDispatch} from 'react-redux';
 import './App.css';
 import GameBoard from './components/GameBoard';
 import Keyboard from './components/Keyboard';
@@ -7,9 +7,12 @@ import EndGameModal from './components/EndGameModal';
 import NoteTracker from './components/NoteTracker';
 
 
+// TODO: is an advantage of redux that I can move these dispatch actions closer to where they are generated?
 
 function App() {
-  const [gameState, dispatchGameState] = useReducer(GameStateReducer, initialState);
+  const dispatchGameState = useDispatch();
+  const gameState = useSelector(state => state); // can I make this more specific when I move things around
+  console.log(gameState);
   const [showNotes, setShowNotes] = useState(false);
 
   function notesToggleHandler() {

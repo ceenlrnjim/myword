@@ -1,6 +1,9 @@
+import {createStore} from 'redux';
+
 import computeScore from './components/Scoring';
 import pickWord from './sixes';
 import {Map,fromJS} from 'immutable';
+
 
 export const initialState = fromJS({
   targetWord: pickWord(),
@@ -91,6 +94,14 @@ const handlers = {
     'DELETE_LETTER': deleteLetter
 }
 
-export function GameStateReducer(state, action) {
-    return handlers[action.type](state, action);
+function gameStateReducer(state, action) {
+    if (action && action.type && handlers[action.type]) {
+        return handlers[action.type](state, action);
+    } else {
+        return state;
+    }
 }
+
+const gameStateStore = createStore(gameStateReducer, initialState);
+
+export default gameStateStore;
