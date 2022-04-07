@@ -1,6 +1,6 @@
 import computeScore from './components/Scoring';
 import pickWord from './sixes';
-import {Map,List, fromJS} from 'immutable';
+import {Map,fromJS} from 'immutable';
 
 export const initialState = fromJS({
   targetWord: pickWord(),
@@ -75,10 +75,8 @@ function checkGuess(gameState, action) {
 
 function deleteLetter(gameState, action) {
     if (!gameState.get('rowEmpty') && !gameState.get('gameOver')) {
-        const currentRow = gameState.get('currentRow');
-        const value = gameState.rowValue();
-        const newState = gameState.updateIn(['rows', currentRow, 'value'], v => v.substring(0,v.length-1))
-                                    .set('rowEmpty', value.length === 1) // if it was 1 before the backspace, it is 0 now so empty
+        const newState = gameState.updateIn(['rows', gameState.get('currentRow'), 'value'], v => v.substring(0,v.length-1))
+                                    .set('rowEmpty', gameState.rowValue().length === 1) // if it was 1 before the backspace, it is 0 now so empty
                                     .set('rowComplete', false);
 
         return newState;
