@@ -1,5 +1,5 @@
 import {useEffect} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function isLetter(key) {
@@ -7,8 +7,11 @@ function isLetter(key) {
 }
 
 function Keyboard(props) {
-    
+    const {rowComplete, rowEmpty} = useSelector(state => ({ rowComplete: state.get('rowComplete'), rowEmpty: state.get('rowEmpty')}));
     const dispatchGameState = useDispatch();
+
+    const enterEnabled = rowComplete;
+    const backEnabled = !rowEmpty;
     
     const notesHandler = (event) => {
         event.target.blur();
@@ -70,7 +73,7 @@ function Keyboard(props) {
                 <button className="keyboard__row__key" onClick={letterPressHandler}>L</button>
             </div>
             <div className="keyboard__row">
-                <button className="keyboard__row__key" onClick={enterPressHandler} disabled={!props.enterEnabled}>Enter</button>
+                <button className="keyboard__row__key" onClick={enterPressHandler} disabled={!enterEnabled}>Enter</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>Z</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>X</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>C</button>
@@ -78,7 +81,7 @@ function Keyboard(props) {
                 <button className="keyboard__row__key" onClick={letterPressHandler}>B</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>N</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>M</button>
-                <button className="keyboard__row__key" onClick={backPressHandler} disabled={!props.backEnabled}>Back</button>
+                <button className="keyboard__row__key" onClick={backPressHandler} disabled={!backEnabled}>Back</button>
                 <button className="keyboard__row__key" onClick={notesHandler} type="button">Notes</button>
             </div>
             <div className="keyboard__row">
