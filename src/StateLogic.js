@@ -2,52 +2,52 @@ import {createStore} from 'redux';
 
 import computeScore from './components/Scoring';
 import pickWord from './sixes';
-import {Map,fromJS} from 'immutable';
 
 
-export const initialState = fromJS({
+export const rowConfig = {
+    row0: { start:0, length: 2, nextRow: 'row1'},
+    row1: { start:0, length: 3, nextRow: 'row2'},
+    row2: { start:1, length: 3, nextRow: 'row3'},
+    row3: { start:2, length: 3, nextRow: 'row4'},
+    row4: { start:3, length: 3, nextRow: 'row5'},
+    row5: { start:2, length: 4, nextRow: 'row6'},
+    row6: { start:1, length: 4, nextRow: 'row7'},
+    row7: { start:0, length: 4, nextRow: 'row8'},
+    row8: { start:0, length: 5, nextRow: 'row9'},
+    row9: { start:1, length: 5, nextRow: 'row10'},
+    row10: { start:0, length: 6, nextRow: null}
+}
+
+
+export const initialState = {
   targetWord: pickWord(),
   showNotes: false,
   totalScore: 0,
-  currentRow: 'rowA',
+  currentRow: 'row0',
   gameOver: false,
   rowComplete: false,
   rowEmpty: true,
-  rows: {
-    rowA: { value:'', start:0, length: 2, nextRow: 'rowB'},
-    rowB: { value:'', start:0, length: 3, nextRow: 'rowC'},
-    rowC: { value:'', start:1, length: 3, nextRow: 'rowD'},
-    rowD: { value:'', start:2, length: 3, nextRow: 'rowE'},
-    rowE: { value:'', start:3, length: 3, nextRow: 'rowF'},
-    rowF: { value:'', start:2, length: 4, nextRow: 'rowG'},
-    rowG: { value:'', start:1, length: 4, nextRow: 'rowH'},
-    rowH: { value:'', start:0, length: 4, nextRow: 'rowI'},
-    rowI: { value:'', start:0, length: 5, nextRow: 'rowJ'},
-    rowJ: { value:'', start:1, length: 5, nextRow: 'rowK'},
-    rowK: { value:'', start:0, length: 6, nextRow: null}
-  }
-});
-
-// Let's get wild
-Map.prototype.rowLength = function() {
-    return this.getIn(['rows',this.get('currentRow'), 'length']);
-}
-
-Map.prototype.rowValue = function() {
-    return this.getIn(['rows',this.get('currentRow'), 'value']);
-}
-
-Map.prototype.rowStart = function() {
-    return this.getIn(['rows',this.get('currentRow'), 'start']);
-}
+  row0: '',
+  row1: '',
+  row2: '',
+  row3: '',
+  row4: '',
+  row5: '',
+  row6: '',
+  row7: '',
+  row8: '',
+  row9: '',
+  row10: '',
+};
 
 function enterLetter(gameState, action) {
-    if (!gameState.get('rowComplete') && !gameState.get('gameOver')) {
-        const currentRow = gameState.get('currentRow');
-        const newState = gameState.updateIn(['rows', currentRow, 'value'], value => value + action.letter)
-                                    .set('rowEmpty', false)
-                                    .update(me => me.set('rowComplete', me.rowValue().length === me.rowLength()));
-
+    console.log("Letter entered: " + action.letter);
+    if (!gameState.rowComplete && !gameState.gameOver) {
+        const newState = {...gameState};
+        const currentRow = gameState.currentRow;
+        newState[currentRow] = gameState[currentRow] + action.letter;
+        newState.rowComplete = newState[currentRow].length === rowConfig[currentRow].length;
+        newState.rowEmpty = false;
         return newState;
     } else {
         return gameState;
@@ -55,22 +55,21 @@ function enterLetter(gameState, action) {
 }
 
 function checkGuess(gameState, action) {
-    if (gameState.get('rowComplete')) {
-        const currentRow = gameState.get('currentRow');
-        const score = computeScore(gameState.get('targetWord'), 
-                                   gameState.rowValue(),
-                                   gameState.rowStart(),
-                                   gameState.rowLength());
+    if (gameState.rowComplete) {
+        const currentRow = gameState.currentRow;
+        const newState = {...gameState};
+        const score = computeScore(gameState.targetWord, gameState[currentRow], rowConfig[currentRow].start, rowConfig[currentRow].length);
+        newState.totalScore += score;
+        newState[currentRow + 'score'] = score;
+        newState.rowEmpty = true;
+        newState.rowComplete = false;
+        const nextRow = rowConfig[currentRow].nextRow;
+        if (nextRow) {
+            newState.currentRow = nextRow;
+        } else {
+            newState.gameOver = true;
+        }
 
-        const newState = gameState.update('totalScore', total => total + score)
-                                  .setIn(['rows', currentRow, 'score'], score)
-                                  .set('rowEmpty', true)
-                                  .set('rowComplete', false)
-                                  .update(me => {
-                                      const nextRow = me.getIn(['rows', currentRow, 'nextRow']);
-                                      return nextRow ? me.set('currentRow', nextRow) : me.set('gameOver', true);
-                                  });
-        
         return newState;
     } else {
         return gameState; // no change
@@ -78,10 +77,12 @@ function checkGuess(gameState, action) {
 }
 
 function deleteLetter(gameState, action) {
-    if (!gameState.get('rowEmpty') && !gameState.get('gameOver')) {
-        const newState = gameState.updateIn(['rows', gameState.get('currentRow'), 'value'], v => v.substring(0,v.length-1))
-                                    .set('rowEmpty', gameState.rowValue().length === 1) // if it was 1 before the backspace, it is 0 now so empty
-                                    .set('rowComplete', false);
+    if (!gameState.rowEmpty && !gameState.gameOver) {
+        const currentRow = gameState.currentRow;
+        const newState = {...gameState};
+        newState[currentRow] = newState[currentRow].substring(0, newState[currentRow].length-1);
+        newState.rowEmpty = newState[currentRow].length === 0;
+        newState.rowComplete = false;
 
         return newState;
     } else {
@@ -90,7 +91,7 @@ function deleteLetter(gameState, action) {
 }
 
 function toggleNotes(gameState, action) {
-    return gameState.update('showNotes', v=>!v);
+    return {...gameState, showNotes: !gameState.showNotes};
 }
 
 const handlers = {
