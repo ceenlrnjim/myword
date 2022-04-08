@@ -7,8 +7,8 @@ function isLetter(key) {
 }
 
 function Keyboard(props) {
-    const {rowComplete, rowEmpty} = useSelector(state => ({ rowComplete: state.get('rowComplete'), rowEmpty: state.get('rowEmpty')}));
     const dispatchGameState = useDispatch();
+    const {rowComplete, rowEmpty} = useSelector(state => ({rowComplete: state.rowComplete, rowEmpty: state.rowEmpty}));
 
     const enterEnabled = rowComplete;
     const backEnabled = !rowEmpty;

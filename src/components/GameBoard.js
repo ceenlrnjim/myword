@@ -1,17 +1,25 @@
 import GuessRow from "./GuessRow";
 import {useSelector} from "react-redux";
+import {rowConfig} from "../StateLogic";
+
+function buildRowMap(state) {
+    return [0,1,2,3,4,5,6,7,8,9,10].map(i => ({
+        start: rowConfig['row' + i].start,
+        length: rowConfig['row' + i].length,
+        value: state['row' + i],
+        score: state['row' + i + 'score']
+    }));
+}
 
 function GameBoard(props) {
-    const rows = useSelector(state => state.get('rows'))
-                   .sortBy((v,k) => k, (k1,k2) => k1.localeCompare(k2))
+    const rows = useSelector(state => buildRowMap(state))
                    .map((rowObj,k) => 
                     <GuessRow key={k}
-                        rangeStart={rowObj.get('start')} 
-                        rangeLength={rowObj.get('length')}
-                        guess={rowObj.get('value')}
-                        score={rowObj.get('score')}/>
-                   ).toSetSeq()
-                   .toArray();
+                        rangeStart={rowObj.start} 
+                        rangeLength={rowObj.length}
+                        guess={rowObj.value}
+                        score={rowObj.score}/>
+                   );
     
     return ( 
         <div className="board">

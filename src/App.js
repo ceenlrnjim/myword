@@ -10,9 +10,9 @@ import NoteTracker from './components/NoteTracker';
 
 function App() {
   const {targetWord, totalScore, gameOver} = useSelector(state => { 
-    return {gameOver: state.get('gameOver'), 
-            totalScore: state.get('totalScore'), 
-            targetWord: state.get('targetWord')}
+    return {gameOver: state.gameOver, 
+            totalScore: state.totalScore, 
+            targetWord: state.targetWord}
   });
 
   return (

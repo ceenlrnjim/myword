@@ -7,7 +7,7 @@ function NoteTracker(props) {
     const [columnsCrossed, setColumnCrossed] = useState({ '1': false, '2': false, '3': false, '4': false, '5': false, '6': false });
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const rows = letters.split('').map((letter, ix) => <LetterRow key={ix} letter={letter} columnsCrossed={columnsCrossed} />);
-    const showNotes = useSelector(state => state.get('showNotes'));
+    const showNotes = useSelector(state => state.showNotes);
 
     function crossColumnHandler(column) {
         return function(event) {
