@@ -7,6 +7,7 @@ import {Map,fromJS} from 'immutable';
 
 export const initialState = fromJS({
   targetWord: pickWord(),
+  showNotes: false,
   totalScore: 0,
   currentRow: 'rowA',
   gameOver: false,
@@ -88,10 +89,15 @@ function deleteLetter(gameState, action) {
     }
 }
 
+function toggleNotes(gameState, action) {
+    return gameState.update('showNotes', v=>!v);
+}
+
 const handlers = {
     'ENTER_LETTER': enterLetter,
     'CHECK_GUESS': checkGuess,
-    'DELETE_LETTER': deleteLetter
+    'DELETE_LETTER': deleteLetter,
+    'TOGGLE_NOTES': toggleNotes
 }
 
 function gameStateReducer(state, action) {

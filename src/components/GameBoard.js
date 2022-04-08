@@ -1,8 +1,8 @@
 import GuessRow from "./GuessRow";
+import {useSelector} from "react-redux";
 
 function GameBoard(props) {
-    // TODO: 6 and 7 version?
-    const rows = props.gameState.get('rows')
+    const rows = useSelector(state => state.get('rows'))
                    .sortBy((v,k) => k, (k1,k2) => k1.localeCompare(k2))
                    .map((rowObj,k) => 
                     <GuessRow key={k}

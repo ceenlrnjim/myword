@@ -1,4 +1,5 @@
 import {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function isLetter(key) {
@@ -6,28 +7,42 @@ function isLetter(key) {
 }
 
 function Keyboard(props) {
-    const {onBackSpace, onEnterGuess, onLetterGuess} = props;
-    const letterPressHandler = (event) => props.onLetterGuess(event.target.textContent);
-    const enterPressHandler = () => props.onEnterGuess();
-    const backPressHandler = () => props.onBackSpace();
+    
+    const dispatchGameState = useDispatch();
+    
     const notesHandler = (event) => {
         event.target.blur();
-        props.toggleNotes();
+        dispatchGameState({type:'TOGGLE_NOTES'});
     }
 
+    function letterPressHandler(event) {
+        letterHandler(event.target.textContent);
+    }
+
+    function letterHandler(letter) {
+        dispatchGameState({type:'ENTER_LETTER', letter: letter});
+    }
+
+    function enterPressHandler() {
+        dispatchGameState({type:'CHECK_GUESS'});
+    }
+
+    function backPressHandler() {
+        dispatchGameState({type:'DELETE_LETTER'});
+    }
 
     useEffect(() => {
         document.body.onkeydown = function(event) {
             if (event.key === 'Del' || event.key === 'Backspace') {
-                onBackSpace();
+                backPressHandler();
             } else if (event.key === 'Go' || event.key === 'Enter') {
-                onEnterGuess();
+                enterPressHandler();
             } else if (isLetter(event.key)) {
-                onLetterGuess(event.key.toUpperCase());
+                letterHandler(event.key.toUpperCase());
             }
         }
         // these never really change in this application, but want to get rid of the warning
-    },[onBackSpace, onEnterGuess, onLetterGuess]);
+    },[dispatchGameState]);
 
     return  (
         <div className="keyboard">
