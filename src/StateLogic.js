@@ -1,4 +1,4 @@
-import {createStore} from 'redux';
+import {createSlice, configureStore} from '@reduxjs/toolkit';
 
 import computeScore from './components/Scoring';
 import pickWord from './sixes';
@@ -41,11 +41,11 @@ export const initialState = {
 };
 
 function enterLetter(gameState, action) {
-    console.log("Letter entered: " + action.letter);
+    console.log("Letter entered: " + action.payload);
     if (!gameState.rowComplete && !gameState.gameOver) {
         const newState = {...gameState};
         const currentRow = gameState.currentRow;
-        newState[currentRow] = gameState[currentRow] + action.letter;
+        newState[currentRow] = gameState[currentRow] + action.payload;
         newState.rowComplete = newState[currentRow].length === rowConfig[currentRow].length;
         newState.rowEmpty = false;
         return newState;
@@ -54,7 +54,7 @@ function enterLetter(gameState, action) {
     }
 }
 
-function checkGuess(gameState, action) {
+function checkGuess(gameState) {
     if (gameState.rowComplete) {
         const currentRow = gameState.currentRow;
         const newState = {...gameState};
@@ -76,7 +76,7 @@ function checkGuess(gameState, action) {
     }
 }
 
-function deleteLetter(gameState, action) {
+function deleteLetter(gameState) {
     if (!gameState.rowEmpty && !gameState.gameOver) {
         const currentRow = gameState.currentRow;
         const newState = {...gameState};
@@ -90,25 +90,22 @@ function deleteLetter(gameState, action) {
     }
 }
 
-function toggleNotes(gameState, action) {
+function toggleNotes(gameState) {
     return {...gameState, showNotes: !gameState.showNotes};
 }
 
-const handlers = {
-    'ENTER_LETTER': enterLetter,
-    'CHECK_GUESS': checkGuess,
-    'DELETE_LETTER': deleteLetter,
-    'TOGGLE_NOTES': toggleNotes
-}
-
-function gameStateReducer(state, action) {
-    if (action && action.type && handlers[action.type]) {
-        return handlers[action.type](state, action);
-    } else {
-        return state;
+const gameStateSlice = createSlice({
+    name: 'gameState',
+    initialState: initialState,
+    reducers: {
+        enterLetter,
+        checkGuess,
+        deleteLetter,
+        toggleNotes
     }
-}
+});
 
-const gameStateStore = createStore(gameStateReducer, initialState);
+const gameStateStore = configureStore({reducer: gameStateSlice.reducer});
+export const actions = gameStateSlice.actions;
 
 export default gameStateStore;

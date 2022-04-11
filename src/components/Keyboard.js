@@ -1,5 +1,6 @@
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import { actions } from '../StateLogic';
 
 const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function isLetter(key) {
@@ -15,7 +16,7 @@ function Keyboard(props) {
     
     const notesHandler = (event) => {
         event.target.blur();
-        dispatchGameState({type:'TOGGLE_NOTES'});
+        dispatchGameState(actions.toggleNotes());
     }
 
     function letterPressHandler(event) {
@@ -23,15 +24,15 @@ function Keyboard(props) {
     }
 
     function letterHandler(letter) {
-        dispatchGameState({type:'ENTER_LETTER', letter: letter});
+        dispatchGameState(actions.enterLetter(letter));
     }
 
     function enterPressHandler() {
-        dispatchGameState({type:'CHECK_GUESS'});
+        dispatchGameState(actions.checkGuess());
     }
 
     function backPressHandler() {
-        dispatchGameState({type:'DELETE_LETTER'});
+        dispatchGameState(actions.deleteLetter());
     }
 
     useEffect(() => {
