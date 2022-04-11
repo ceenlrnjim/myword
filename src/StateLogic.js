@@ -43,55 +43,41 @@ export const initialState = {
 function enterLetter(gameState, action) {
     console.log("Letter entered: " + action.payload);
     if (!gameState.rowComplete && !gameState.gameOver) {
-        const newState = {...gameState};
         const currentRow = gameState.currentRow;
-        newState[currentRow] = gameState[currentRow] + action.payload;
-        newState.rowComplete = newState[currentRow].length === rowConfig[currentRow].length;
-        newState.rowEmpty = false;
-        return newState;
-    } else {
-        return gameState;
+        gameState[currentRow] = gameState[currentRow] + action.payload;
+        gameState.rowComplete = gameState[currentRow].length === rowConfig[currentRow].length;
+        gameState.rowEmpty = false;
     }
 }
 
 function checkGuess(gameState) {
     if (gameState.rowComplete) {
         const currentRow = gameState.currentRow;
-        const newState = {...gameState};
         const score = computeScore(gameState.targetWord, gameState[currentRow], rowConfig[currentRow].start, rowConfig[currentRow].length);
-        newState.totalScore += score;
-        newState[currentRow + 'score'] = score;
-        newState.rowEmpty = true;
-        newState.rowComplete = false;
+        gameState.totalScore += score;
+        gameState[currentRow + 'score'] = score;
+        gameState.rowEmpty = true;
+        gameState.rowComplete = false;
         const nextRow = rowConfig[currentRow].nextRow;
         if (nextRow) {
-            newState.currentRow = nextRow;
+            gameState.currentRow = nextRow;
         } else {
-            newState.gameOver = true;
+            gameState.gameOver = true;
         }
-
-        return newState;
-    } else {
-        return gameState; // no change
     }
 }
 
 function deleteLetter(gameState) {
     if (!gameState.rowEmpty && !gameState.gameOver) {
         const currentRow = gameState.currentRow;
-        const newState = {...gameState};
-        newState[currentRow] = newState[currentRow].substring(0, newState[currentRow].length-1);
-        newState.rowEmpty = newState[currentRow].length === 0;
-        newState.rowComplete = false;
-
-        return newState;
-    } else {
-        return gameState;
+        gameState[currentRow] = gameState[currentRow].substring(0, gameState[currentRow].length-1);
+        gameState.rowEmpty = gameState[currentRow].length === 0;
+        gameState.rowComplete = false;
     }
 }
 
 function toggleNotes(gameState) {
-    return {...gameState, showNotes: !gameState.showNotes};
+    gameState.showNotes = !gameState.showNotes;
 }
 
 const gameStateSlice = createSlice({
