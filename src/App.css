@@ -42,8 +42,9 @@
 }
 
 .board_row_guess p {
+    aspect-ratio: 1/1;
     font-family: Arial;
-    font-size:  xx-large;
+    font-size:  14px;
     font-weight: bold;
     display:flex;
     align-items: center;
@@ -62,7 +63,7 @@
 .board__row_score {
     border: 1px solid #AAAAAA;
     font-family: Arial;
-    font-size:  20pt;
+    font-size:  14px;
     font-weight: bold;
     display:flex;
     align-items: center;
@@ -87,7 +88,7 @@
     font-family: arial;
     font-weight: bold;
     margin-top: 2px;
-    font-size: xx-large;
+    font-size: 14px;
     border: 1px #AAAAAA solid;
     aspect-ratio: 6/6;
     border-radius: 4px;
@@ -147,4 +148,34 @@
 
 .hidden {
     display: none;
+}
+
+@media(min-height:1500px) {
+    .board_row_guess p {
+        font-size:  x-large;
+    }
+
+    .keyboard__row__key {
+        font-size: x-large;
+    }
+
+
+    .board__row_score {
+        font-size: x-large;
+    }
+}
+
+@media(min-height:2000px) {
+    .board_row_guess p {
+        font-size:  xx-large;
+    }
+
+    .keyboard__row__key {
+        font-size: xx-large;
+    }
+
+
+    .board__row_score {
+        font-size: xx-large;
+    }
 }

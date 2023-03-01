@@ -74,7 +74,7 @@ function Keyboard(props) {
                 <button className="keyboard__row__key" onClick={letterPressHandler}>L</button>
             </div>
             <div className="keyboard__row">
-                <button className="keyboard__row__key" onClick={enterPressHandler} disabled={!enterEnabled}>Enter</button>
+                <button className="keyboard__row__key" onClick={enterPressHandler} disabled={!enterEnabled}>&#8627;</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>Z</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>X</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>C</button>
@@ -82,8 +82,8 @@ function Keyboard(props) {
                 <button className="keyboard__row__key" onClick={letterPressHandler}>B</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>N</button>
                 <button className="keyboard__row__key" onClick={letterPressHandler}>M</button>
-                <button className="keyboard__row__key" onClick={backPressHandler} disabled={!backEnabled}>Back</button>
-                <button className="keyboard__row__key" onClick={notesHandler} type="button">Notes</button>
+                <button className="keyboard__row__key" onClick={backPressHandler} disabled={!backEnabled}>&#9003;</button>
+                <button className="keyboard__row__key" onClick={notesHandler} type="button">&#9072;</button>
             </div>
             <div className="keyboard__row">
             </div>
