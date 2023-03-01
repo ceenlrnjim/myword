@@ -12,7 +12,7 @@
 
 .game_wrapper {
     height: 100%;
-    aspect-ratio: 9/16;
+    aspect-ratio: 1080/2460;
 }
 
 .board {
@@ -27,7 +27,7 @@
 
 .board__row_cells {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .board_row_guess {
@@ -43,7 +43,7 @@
 
 .board_row_guess p {
     font-family: Arial;
-    font-size:  20pt;
+    font-size:  xx-large;
     font-weight: bold;
     display:flex;
     align-items: center;
@@ -87,6 +87,7 @@
     font-family: arial;
     font-weight: bold;
     margin-top: 2px;
+    font-size: xx-large;
     border: 1px #AAAAAA solid;
     aspect-ratio: 6/6;
     border-radius: 4px;
